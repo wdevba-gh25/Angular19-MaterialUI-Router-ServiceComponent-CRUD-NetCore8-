@@ -102,6 +102,17 @@ Open:
 
 ---
 
+## Testing
+
+From `ng19NP_MAT/`:
+
+```bash
+npm test
+# headless:
+ng test --watch=false --browsers=ChromeHeadless
+```
+This demo includes a couple of focused tests (service + component) using Angular’s HTTP testing utilities (fast, deterministic, no real DB required).
+
 ## Troubleshooting
 
 ### Angular shows `net::ERR_TIMED_OUT` calling the API
