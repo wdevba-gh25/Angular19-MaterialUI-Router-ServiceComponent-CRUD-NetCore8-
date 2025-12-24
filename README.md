@@ -1,80 +1,126 @@
-# Angular19 MaterialUI Router ServiceComponent CRUD + NetCore8 
+# Angular 19 + Material UI + .NET 8 — Full-Stack CRUD Demo (Employee Management)
 
-## Table of Contents
-- [About](#about)
-- [InstallationUsage](#installationusage)
-- [Highlights](#highlights)
-- [Contributing](#contributing)
-- [License](#license)
+A compact full-stack demo app built to practice **Angular 19 + Angular Material** patterns and wire them to a **.NET 8 Web API** backed by **SQL Server**.
 
-## About
-This Angular 19 app is a demo of an Employee CRUD component, an Autocomplete component, an Input Component, a Service Component and a .NET Core 8 API endpoint. This application also presents a folder structure and the implementation of a Service Component. The Autocomplete component makes use of the Service Component through the call to "service.GetColorList()". That is a demo implentation so you can implement the service "service.getAllDDLItemsByParam(searchValue: string)" in the same Autocomplete component replacing the service GetColorList(). This in case you want to replicate the same functionality of the one described on the other NG19 app "NG19NetCore8Autocomplete project".
+It’s intentionally small (demo/practice scope), but it covers real full-stack mechanics: routing, service calls, modal forms, and a working CRUD API.
 
-## InstallationUsage
+## What this demonstrates
+- **Angular 19 + Angular Material UI** pages with routing
+- **Service-based HTTP integration** to a .NET 8 Web API
+- **Employee CRUD** (list + add/edit modal + delete)
+- **SQL Server** persistence via EF Core (DbContext)
 
-  Previous requirements:
+## Screenshots
+> Files already exist under `Screen Captures/` in this repo.
 
-  THE .NET 8 FRAMEWORK MUST BE INSTALLED.
-  EXPLORER BY DEFAULT, GOOGLE CHROME.
-  Visual Studio 2022 Community.
-  Visual Studio Code.
-  SQL Server 2014 or higher.
-  SQL Management Studio v17.8.1 or higher.
-  NodeJS v 22.6.0 for windows 10.
-  Angular 19 installed locally, not globally, with npx command.
-  
-1. Download the ZIP file of this project.
-IMPORTANT: 
-        By default only the Autocomplete part of this demo works.
-        Please follow the instructions in order to test the second part of this demo:
-        Employee CRUD. 
+### Employee CRUD
+![Employee CRUD](Screen%20Captures/Employee%20CRUD.png)
 
-WARNING: Before running the NG server, make sure you're running the Employee.Api WEB API, coming along with this demo and also make sure you have installed the DB "TestDb" on your local SQL server. You may or may not need to make some adjustments on your connection strings inside the Employee.Api.
+### Autocomplete (Material)
+![Autocomplete](Screen%20Captures/Autocomplete.png)
 
+### Input (Material)
+![Input](Screen%20Captures/Input.png)
 
-- The CRUD part presents the classic Create-Read-Update-Delete operations for a Company's employee. The operations work by calling their corresponding APIs on an Employee.Api WEB API .NET Core 8 application.
+## Tech stack
+- Frontend: **Angular 19**, TypeScript, Angular Material, RxJS
+- Backend: **.NET 8 Web API**, Entity Framework Core
+- Database: **SQL Server** (Local / Express)
 
-        1. Run your NG server with the command: npm start
-        2. Open a browser and go to the link:
-  
-                http://localhost:4200
+---
 
-        3. In this app you can try the following URLs:
+## Quickstart (local)
 
-          Home component: 
-                    http://localhost:4200
-                    Presentation of this app.
+### 1) Run the API (.NET 8)
+Open the solution:
 
-          Employee CRUD component: 
-                    http://localhost:4200/employee-data
-                    CRUD operations.
+`API/Employee.Api/Employee.Api.sln`
 
-          Input component: 
-                    http://localhost:4200/input
-                    Angular Material tags.
+Update the connection string in:
 
-          Autocomplete component:
-                     http://localhost:4200/autocomplete
-                     It has hardcoded values for the Drop Down List options.
-                     You can type in any character and it will display all the results containing that character, instantly.
-                     If you prefer values from an API endpoint you can adapt the call to the service 
-                         "service.getAllDDLItemsByParam(searchValue: string)"
-                    and then you'll be able to get data from a real API endpoint.
+`API/Employee.Api/Employee.Api/appsettings.json`
 
-## Highlights
+Example for SQL Server Express on your machine:
 
-     Some Angular 19 features worth noting:
+```json
+"ConnectionStrings": {
+  "testCon": "Server=HP01\\SQLEXPRESS;Database=NG19_TestDb;MultipleActiveResultSets=true;Trusted_Connection=True;TrustServerCertificate=True"
+}
+```
 
-    1. Angular Routes
-    2. Component imports.
-    3. Service Components
-    4. Folder structure.
-    5. Angular Material UI.
-    6. In the file "\src\app\app.routes.ts" you are presented with a set routes, matching the components you can find in the folder structure.
-          
-## Contributing
- This application is intended as a demo that is part of my Portfolio of apps. 
- I'll update this Portfolio with the latest technologies I have skills on as soon as possible.
+Run the API (Visual Studio or CLI):
 
-## License
-This project is licensed under the [MIT License](LICENSE).
+```bash
+dotnet run --project API/Employee.Api/Employee.Api/Employee.Api.csproj
+```
+
+Expected default URLs (from `launchSettings.json`):
+- HTTPS: `https://localhost:7271`
+- HTTP: `http://localhost:5032`
+
+Sanity check:
+
+```bash
+curl -k https://localhost:7271/api/employeemaster
+```
+
+### 2) Run the Angular app (Angular 19)
+From:
+
+`ng19NP_MAT/`
+
+Install and run:
+
+```bash
+npm install
+ng serve
+```
+
+Open:
+- `http://localhost:4200/employee-data` (Employee CRUD)
+- `http://localhost:4200/autocomplete` (Autocomplete demo)
+- `http://localhost:4200/input` (Input demo)
+
+---
+
+## API endpoints used
+- `GET/POST` `https://localhost:7271/api/employeemaster`
+- `GET/PUT/DELETE` `https://localhost:7271/api/employeemaster/{id}`
+
+---
+
+## Project structure (high level)
+
+- `ng19NP_MAT/` — Angular 19 app
+  - `src/app/employee-data` — employee list + modal CRUD UI
+  - `src/app/component/autocomplete` — Material autocomplete demo
+  - `src/app/input` — Material input demo
+  - `src/app/service` — API calls
+- `API/Employee.Api/` — .NET 8 Web API
+  - `Controllers/EmployeeMasterController.cs` — CRUD controller
+  - `Model/EmployeeDbContext.cs` — EF Core DbContext
+
+---
+
+## Troubleshooting
+
+### Angular shows `net::ERR_TIMED_OUT` calling the API
+This usually means the API is not reachable or is blocked/hanging on DB connection.
+
+- Confirm API is running:
+  - `https://localhost:7271/weatherforecast`
+- Confirm endpoint responds:
+  - `curl -k https://localhost:7271/api/employeemaster`
+- If the API hangs or errors, re-check the SQL Server instance name:
+  - Common values: `MACHINE\\SQLEXPRESS` / `localhost\\SQLEXPRESS`
+
+### API starts but returns 500 (DB/table not found)
+This project expects a SQL Server DB with the required tables. If you’re running it on a fresh DB, you’ll need to create the schema (EF migrations or manual script).
+
+### CORS errors in the browser console
+If you see CORS blocks after the API is responding, ensure the backend CORS policy is applied consistently. (Some setups require calling `UseCors("allowCors")` in `Program.cs`.)
+
+---
+
+## Notes
+This repo is intentionally a **practice/demo** app. The goal is to show Angular Material patterns plus clean API wiring (not a complete business-domain MVP). For production-style work, see my **SaaS ERP / AI Integration** projects.
